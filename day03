@@ -1,0 +1,56 @@
+/*
+* 宝石与石头 【算法】
+* 思路：本质是要检查石头中有几个字符与宝石中的一致
+* 即拿着石头中的字符到宝石中去查索引位置
+* 能查到 -> 宝石数+1
+* */
+public class Solution771 {
+    public static int numJewelsInStones(String J, String S) {
+        int len = J.length();
+        int num = 0;
+        char[] s = S.toCharArray();
+        for (int i1 = 0; i1 < s.length; i1++) {
+            if(J.indexOf(s[i1]) != -1){
+                num ++;
+            }
+        }
+        return num;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(numJewelsInStones("aA" ,"aAAbbbb"));
+    }
+}
+
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+* 拥有最多糖果的孩子【算法】
+* 思路：两次for、循环
+* 第一次for循环找到最大糖果数
+* 第二次for循环判断各个孩子的糖果增加后是否多于或等于最大糖果树
+* */
+public class Solution1431 {
+    public static List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+
+        int max = 0;
+        List<Boolean> list = new ArrayList<>();// 多态
+        for (int i = 0; i < candies.length; i++) {
+            max = max > candies[i] ? max : candies[i];
+        }
+        for (int i = 0; i < candies.length; i++) {
+            if(candies[i] + extraCandies < max){
+                list.add(false);
+            } else {
+                list.add(true);
+            }
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+        int[] list = {2, 1, 4, 5, 3};
+        System.out.println(kidsWithCandies(list,3));
+    }
+}
