@@ -1,0 +1,77 @@
+package day13;
+/*   
+* 【无重复字符的最长子串】  【中等】
+给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+* */
+/* 思路
+* 对字符串进行双指针动态遍历
+* */
+public class Solution3 {
+    public static void main(String[] args) {
+        String s = "";
+        System.out.println(lengthOfLongestSubstring(s));
+    }
+
+    public static int lengthOfLongestSubstring(String s) {
+        int min = 0;
+      
+      
+      max =1;
+        int len = 0;
+        if(s.length()==1){
+            return 1;
+        }
+        if(s.length()==0){
+            return 0;
+        }
+        String s1 = s.substring(min,max);
+        while(max < s.length()){
+            char ch = s.charAt(max);
+            if(s1.indexOf(ch) != -1){
+                min = s1.indexOf(ch) + 1 + min;
+                max = min + 1;
+                s1 = s.substring(min,max);
+            } else {
+                max++;
+                s1 = s1 + ch;
+            }
+            len = len > s1.length() ? len : s1.length();
+        }
+        return len;
+    }
+}
+
+package day13;
+
+/*剑指Offer03 找到数组中的重复数字*/ 【简单】
+/*题目描述：
+找出数组中重复的数字。
+在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。
+数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+*/
+/* 思路
+* 利用HashCode的方法
+* 与List相比，Set具有增删快的优势，因此可以用HashSet来不断添加数值
+* 由于相同的数值HashCode相同，而Set中不允许直接添加HashCode相同的数值，通过这种方法就可以判别那些数值存重复
+* 并且这种算法的运行速度很快
+* */
+import java.util.*;
+
+public class Offer03 {
+    public static void main(String[] args) {
+        int[] nums = {2,3,1,0,2,5,3};
+        System.out.println(findRepeatNumber(nums));
+    }
+
+    public static int findRepeatNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int repeat = -1;
+        for (int num:nums) {
+            if(set.add(num) == false){
+                repeat = num;
+                return repeat;
+            }
+        }
+        return repeat;
+    }
+}
