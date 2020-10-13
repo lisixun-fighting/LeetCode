@@ -1,0 +1,223 @@
+package day14;
+
+import java.util.ArrayList;
+
+/*最长回文子串*/
+    public static void main(String[] args) {
+        String s = "abcd";
+        System.out.println(longestPalindrome(s));
+    }
+
+
+    /*思路：先在字符串中找到长度为2或长度为3的回文子串，然后将子串向两端扩大，得到各个最大化的回文子串
+     */
+    public static String longestPalindrome(String s){
+        if(s.length() == 0){
+            return null;
+        }
+        char[] ch = s.toCharArray();
+        ArrayList<Integer[]> list = new ArrayList<>();
+        // 从长度为二的子串起始扩张
+        for (int i = 0; i <= ch.length - 2; i++) {
+            if(ch[i] == ch[i+1]){
+                list.add(expandPalindrome( i, i + 1, ch));
+            }
+        }
+        // 从长度为三的子串起始扩张
+        for (int i = 0; i <= ch.length - 3; i++) {
+            if(ch[i] == ch[i+2]){
+                list.add(expandPalindrome( i, i + 2, ch));
+            }
+        }
+        // 对多对指针所代表的长度进行比较，返回能截出最长子串的一对指针。
+        int max = 0;
+        int[] result = new int[2];
+        for (Integer[] l1 :list) {
+            int begin = l1[0];
+            int end = l1[1];
+            if(end - begin + 1 > max){
+                max = end - begin + 1;
+                result[0] = begin;
+                result[1] = end;
+            }
+        };
+        // 返回最长回文子串
+        return s.substring(result[0],result[1] + 1);
+    }
+
+    // 创建扩大回文子串的方法，将中心的两个指针不断向两端扩张
+    private static Integer[] expandPalindrome(int begin1,int begin2, char[] list){
+        int len = list.length;
+        // 停止扩张的两个条件：1.指针之一超出数组范围。2.两个指针指到的数不一样。
+        while(begin1 >= 0 && begin2 <= len - 1){
+            if(list[begin1] != list[begin2]){
+                Integer[] result = {begin1 + 1, begin2 - 1};
+                return result;
+            }
+            begin1 --;
+            begin2 ++;
+        }
+        Integer[] result = {begin1 + 1, begin2 - 1};
+        // 返回两个指针
+        return result;
+    }
+}
+
+package day14;
+/*
+* 【句子相似性】
+* 给定两个句子 words1, words2 （每个用字符串数组表示），
+* 和一个相似单词对的列表 pairs ，判断是否两个句子是相似的。
+* */
+/*
+* 思路：核心就是多设几个if判断语句，由于两句话的长度一致，可以访问他们全部的位数来判断
+* 由于只有两句话，取相同位数的词组成顺序相反的两个词组，若有一个能在Pairs中查到，那么这一位就满足要求了
+* */
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution734 {
+    public static boolean areSentencesSimilar(String[] sentence1, String[] sentence2, List<List<String>> similarPairs) {
+        if(sentence1.length != sentence2.length){
+            return false;
+        }
+        for (int i = 0; i < sentence1.length; i++) {
+            if(sentence1[i] == sentence2[i]){
+                continue;
+            }
+            List<String> list1 = List.of(sentence1[i],sentence2[i]);
+            if(similarPairs.contains(list1)){
+                continue;
+            }
+            List<String> list2 = List.of(sentence2[i],sentence1[i]);
+            if(similarPairs.contains(list2)){
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String[] sentence1 = {"great"};
+        String[] sentence2 = {"great"};
+        List<List<String>> list = new ArrayList<>();
+        System.out.println(list);
+        System.out.println(areSentencesSimilar(sentence1,sentence2,list));
+    }
+}
+
+package day14;
+/*总持续时间可被 60 整除的歌曲*/
+/*
+* 在歌曲列表中，第 i 首歌曲的持续时间为 time[i] 秒。
+
+返回其总持续时间（以秒为单位）可被 60 整除的歌曲对的数量。
+形式上，我们希望索引的数字 i 和 j 满足  i < j 且有 (time[i] + time[j]) % 60 == 0。
+* */
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+/*
+* 思路：
+* 创建一个长度为60的数组，里面记录time各个数据整除60余数的个数
+* 对于余数为x的数，他们可以与余数为60-x的数相结合
+* */
+public class Solution1010 {
+    public static int numPairsDivisibleBy60(int[] time) {
+        /*Map<Integer, Integer> map = new HashMap<>();哈希表方法*/
+        int[] list = new int[60];
+        int num = 0;
+        for (int i = 0; i < time.length; i++) {
+            int temp = time[i] % 60;
+            list[temp] += 1;
+        }
+//        System.out.println(map);
+        for (int i = 1; i < 30; i++) {
+            num += list[i] * list[60 - i];
+
+        }
+        int a = list[0];
+        int b = list[30];
+        num += a * (a - 1)/2 + b * (b - 1)/2;
+        return num;
+
+    }
+
+    public static void main(String[] args) {
+        int[] time = {15,63,451,213,37,209,343,319};
+        System.out.println(numPairsDivisibleBy60(time));
+    }
+}
+
+package day14;
+/*速算机器人*/
+/*
+* 比较简单就不解释了
+* */
+public class LCP17 {
+    public static int calculate(String s) {
+        int x = 1;
+        int y = 0;
+        char[] list = s.toCharArray();
+        for (int i = 0; i < list.length; i++) {
+            if(list[i] == 'A'){
+                x = 2 * x + y;
+            }else{
+                y = 2 * y + x;
+            }
+        }
+        return x + y;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(calculate("AB"));
+    }
+}
+
+package day14;
+/*早餐组合*/
+/*
+* 小扣在秋日市集选择了一家早餐摊位，一维整型数组 staple 中记录了每种主食的价格，
+* 一维整型数组 drinks 中记录了每种饮料的价格。小扣的计划选择一份主食和一款饮料，
+* 且花费不超过 x 元。请返回小扣共有多少种购买方案。
+
+* */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/*
+* 思路：若采用两个嵌套的for循环将非常的耗费时间
+* 因此需要转化思路，将staple中小于各个数值所对应的数字个数记录在一个数组中，如 <2, <3. <4有多少个，存在list1中
+* 而drinks只需要将各个数值所对应的数字个数记录下来，如 =2，=3，=4有多少个，存在list2中
+* 最终遍历list2各个数值i，同时访问list2中的x-i，相乘就可以得到drinks价值为i所对应的组合数
+* */
+
+public class LCP18 {
+    public long breakfastNumber(int[] staple, int[] drinks, int x) {
+        long num = 0;
+        int[] list1 = new int[x + 1];
+        int[] list2 = new int[x + 1];
+        for (int i = 0; i < staple.length; i++) {
+            if (staple[i] <= x) {
+                list1[staple[i]]++; // 数组list1中保存staple中小于x的各个数值的个数
+            }
+        }
+        for (int i = 0; i < drinks.length; i++) {
+            if (drinks[i] <= x) {
+                list2[drinks[i]]++; // 数组list2中保存drinks中小于x的各个数值的个数
+            }
+        }
+        for (int i = 1; i <= x; i++) {
+            list1[i] = list1[i] + list1[i - 1]; // 将list1各个数值对应的数转换为小于各个数值对应的个数
+        }
+        for (int i = 0; i <= x; i++) {
+            num += list2[i] * list1[x - i];
+        }
+        long result = num % 1000000007L;
+        return (int) result;
+
+    }
+}
