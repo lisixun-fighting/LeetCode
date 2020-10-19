@@ -1,0 +1,54 @@
+/*【剑指Offer29】【循环打印矩阵元素】  【简单】  
+* 矩阵为m×n阶矩阵 遍历一圈要用四个for循环 分别是 1->(m-1) 1->(n-1) (m-1)->1 (n-1)->1
+* 每一次循环m与n均-2 ，1->(m-1-2) 1->(n-1-2) ...
+* 最后一次有以下几种情况
+* 1.m与n均=2 正常循环，最后检测到m，n=0退出
+* 2.m或n其中之一=1，此时可以先退出循环，然后做一个判断，对等于2的进行遍历
+* 3.m与n均=1，跳出循环，只打印一个
+*
+* */
+public class Offer29 {
+    public int[] spiralOrder(int[][] matrix) {
+        int m = matrix.length; // 求矩阵行数，不断更新-2
+        if(m == 0){
+            return null;
+        }
+        int n = matrix[0].length; // 求矩阵列数，不断更新-2
+        int[] result = new int[m*n];
+        int start = 0; // 这是每一次数组的起始点
+        int m0 = 0; // 新矩阵左上角那个下标，每次+1
+        while(m > 1 && n > 1){
+            for (int i = 0; i < n-1; i++) {
+                result[start + i] = matrix[m0][i+m0]; // 上面那一行
+            }
+            start += n-1;
+            for (int i = 0; i < m-1; i++) {
+                result[start + i] = matrix[i+m0][m0+n-1]; // 右边那一列
+            }
+            start += m-1;
+            for (int i = 0; i < n-1; i++) {
+                result[start + i] = matrix[m0+m-1][m0+n-i-1]; // 下面那一行
+            }
+            start += n-1;
+            for (int i = 0; i < m-1; i++) {
+                result[start + i] = matrix[m0+m-i-1][m0]; // 左边那一列
+            }
+            start += m-1;
+            m -= 2;
+            n -= 2;
+            m0++;
+        }
+        if(m==1 && n==1){
+            result[start]=matrix[m0][m0];
+        }else if(m==1 && n>1){
+            for (int i = 0; i < n-1; i++) {
+                result[start + i] = matrix[m0][i+m0]; // 只剩下最后一行
+            }
+        }else if(m>1 && n==1){
+            for (int i = 0; i < m-1; i++) {
+                result[start + i] = matrix[i+m0][m0+n-1]; // 只剩下最后一列
+            }
+        }
+        return result;
+    }
+}
