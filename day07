@@ -1,0 +1,193 @@
+/*
+* 约瑟夫环  【简单】
+* 犹太人数学家约瑟夫所创的求生算法，以前我还在《罗马》里见过这个场景
+* 本质上就是根据最后一步的编号向前递推
+* 其实这类题每次编程前先拿起笔推导一下就会豁然开朗，切忌闷头硬编程。
+* 算法就是数学！
+* */
+public class JosephusLoop {
+    public static void main(String[] args) {
+        int m = 3;
+        int n = 5;
+        int aws = 0;
+        for (int i = 2; i <= n; i++) {
+            aws = (aws + m) % i;
+        }
+        System.out.println(aws);
+    }
+}
+
+package day18;
+
+import java.util.*;
+import java.util.stream.Stream;
+
+/*
+*   字符串的排列   【中等】
+*   若要列出字符串的全部排列方式
+*   可以用递归的思想
+*
+*   每一次调用相同的函数来为字符串增加一个字符，到最后一次时将字符串添加至集合中
+* */
+public class Offer38 {
+    List<String> list = new LinkedList<>();
+    char[] chars;
+    public String[] permutation(String s) {
+        chars = s.toCharArray();
+        add("", "");
+        return list.toArray(new String[list.size()]);
+    }
+
+    void add(String s, String nums){
+        HashSet<Character> set = new HashSet<>();
+        // 当字符串长度已经达到要求时，递归结束
+        if(s.length() == chars.length){
+            list.add(s);
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+            // 设置两个判断条件，决定是否增添字符
+            // 1.在当前位置此字符还未出现  ---> 保证给出的结果不会重复
+            // 2.此前的字符串还没用这个编号的字符 ---> 保证同一元素只用一次
+            if(!set.contains(chars[i]) && !nums.contains(String.valueOf(i))){
+                set.add(chars[i]);
+                add (s + ch, nums+i);
+            }
+        }
+        return;
+    }
+
+    public static void main(String[] args) {
+        Offer38 offer38 = new Offer38();
+        String[] strings = offer38.permutation("abc");
+        Stream.of(strings).forEach(s -> System.out.println(s));
+    }
+}
+
+/*
+*    比较含退格的字符串  【简单】
+*    思路：双指针思想，两个指针分别访问两个字符数组，相互之间进行比较判断是否相等
+*    逆序，每遇到#字符指针就向前加一，并且退格计数器加一，若下一个字符不是#，跳过该字符，退格计数器-1，以此类推。
+*
+*    当一个字符数组访问完毕后，继续遍历另一个字符数组
+*    若另外一个数组剩余部分没有或被#删完，返回true
+*    若另外一个数组仍有剩余，返回false
+*
+*    时间复杂度 O[N+M]
+*    空间复杂度 O[1]
+* */
+
+/*
+*    思路二：重构字符串
+*    用StringBuilder动态生成#修改后的字符串
+*    遇见不是#的字符就将其压入栈中，遇见#就将上一个字符删除
+*
+* */
+public class Solution844 {
+
+    public static boolean backspaceCompare(String S, String T) {
+        char[] ss = S.toCharArray();
+        char[] tt = T.toCharArray();
+        int len1 = ss.length;
+        int len2 = tt.length;
+        int point1 = len1 - 1;
+        int point2 = len2 - 1;
+        int count1 = 0;  // 记录#出现的次数
+        int count2 = 0;
+        while(point1 >= 0 || point2 >= 0) {
+            if(point1 < 0){
+                if(point2 < 0){
+                    return true;
+                }
+                if(tt[point2] != '#' && count2 == 0){
+                    return false;
+                }
+                if(tt[point2] == '#'){
+                    count2++;
+                    point2--;
+                    continue;
+                }
+                if(count2 != 0){
+                    count2--;
+                    point2--;
+                    continue;
+                }
+            }
+            if(point2 < 0){
+                if(point1 < 0){
+                    return true;
+                }
+                if(ss[point1] != '#' && count1 == 0){
+                    return false;
+                }
+                if(ss[point1] == '#'){
+                    count1++;
+                    point1--;
+                    continue;
+                }
+                if(count1 != 0){
+                    count1--;
+                    point1--;
+                    continue;
+                }
+            }
+            if (ss[point1] == '#' && tt[point2] == '#') {
+                point1--;
+                count1++;
+                point2--;
+                count2++;
+                continue;
+            }
+            if (ss[point1] == '#' && tt[point2] != '#') {
+                point1--;
+                count1++;
+                if(count2 != 0){
+                    point2 --;
+                    count2 --;
+                }
+                continue;
+            }
+
+            if (ss[point1] != '#' && tt[point2] == '#') {
+                if(count1 != 0){
+                    point1 --;
+                    count1 --;
+                }
+                point2 --;
+                count2 ++;
+                continue;
+            }
+            if(count2 != 0){
+                point2 --;
+                count2 --;
+                continue;
+            }
+            if(count1 != 0){
+                point1 --;
+                count1 --;
+                continue;
+            }
+            if(point1 < 0 || point2 < 0){
+                break;
+            }
+            if (ss[point1] != '#' && tt[point2] != '#') {
+                if (ss[point1] != tt[point2]) {
+                    return false;
+                }
+                point1 --;
+                point2 --;
+                continue;
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String s1 = "c#a#c";
+        String s2 = "c";
+        System.out.println(backspaceCompare(s1,s2));
+    }
+}
+
