@@ -1,0 +1,143 @@
+844. 比较含退格的字符串
+给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+
+注意：如果对空文本输入退格字符，文本继续为空。
+
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        char[] ss = S.toCharArray();
+        char[] tt = T.toCharArray();
+        int len1 = ss.length;
+        int len2 = tt.length;
+        int point1 = len1 - 1;
+        int point2 = len2 - 1;
+        int count1 = 0;  // 记录#出现的次数
+        int count2 = 0;
+        while(point1 >= 0 || point2 >= 0) {
+            if(point1 < 0){
+                if(point2 < 0){
+                    return true;
+                }
+                if(tt[point2] != '#' && count2 == 0){
+                    return false;
+                }
+                if(tt[point2] == '#'){
+                    count2++;
+                    point2--;
+                    continue;
+                }
+                if(count2 != 0){
+                    count2--;
+                    point2--;
+                    continue;
+                }
+            }
+            if(point2 < 0){
+                if(point1 < 0){
+                    return true;
+                }
+                if(ss[point1] != '#' && count1 == 0){
+                    return false;
+                }
+                if(ss[point1] == '#'){
+                    count1++;
+                    point1--;
+                    continue;
+                }
+                if(count1 != 0){
+                    count1--;
+                    point1--;
+                    continue;
+                }
+            }
+            if (ss[point1] == '#' && tt[point2] == '#') {
+                point1--;
+                count1++;
+                point2--;
+                count2++;
+                continue;
+            }
+            if (ss[point1] == '#' && tt[point2] != '#') {
+                point1--;
+                count1++;
+                if(count2 != 0){
+                    point2 --;
+                    count2 --;
+                }
+                continue;
+            }
+
+            if (ss[point1] != '#' && tt[point2] == '#') {
+                if(count1 != 0){
+                    point1 --;
+                    count1 --;
+                }
+                point2 --;
+                count2 ++;
+                continue;
+            }
+            if(count2 != 0){
+                point2 --;
+                count2 --;
+                continue;
+            }
+            if(count1 != 0){
+                point1 --;
+                count1 --;
+                continue;
+            }
+            if(point1 < 0 || point2 < 0){
+                break;
+            }
+            if (ss[point1] != '#' && tt[point2] != '#') {
+                if (ss[point1] != tt[point2]) {
+                    return false;
+                }
+                point1 --;
+                point2 --;
+                continue;
+            }
+        }
+
+        return true;
+    }
+}
+
+
+
+
+剑指 Offer 38. 字符串的排列
+输入一个字符串，打印出该字符串中字符的所有排列。
+
+你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+
+
+class Solution {
+    List<String> list = new LinkedList<>();
+    char[] chars;
+    public String[] permutation(String s) {
+        chars = s.toCharArray();
+        add("", "");
+        return list.toArray(new String[list.size()]);
+    }
+
+    void add(String s, String nums){
+        HashSet<Character> set = new HashSet<>();
+        // 当字符串长度已经达到要求时，递归结束
+        if(s.length() == chars.length){
+            list.add(s);
+            return;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+            // 设置两个判断条件，决定是否增添字符
+            // 1.在当前位置此字符还未出现  ---> 保证给出的结果不会重复
+            // 2.此前的字符串还没用这个编号的字符 ---> 保证同一元素只用一次
+            if(!set.contains(chars[i]) && !nums.contains(String.valueOf(i))){
+                set.add(chars[i]);
+                add (s + ch, nums+i);
+            }
+        }
+        return;
+    }
+}
