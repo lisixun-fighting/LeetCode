@@ -1,0 +1,165 @@
+/*
+    罗马数字转整数  【简单】
+    思路：抓住问题的破绽：
+    1. 数字最大只有3999，完全可以枚举各个位的情况
+    2. 虽然'V''X''D'等位数左右均有数字修饰，但左边代表－的数字最多只有一位。
+*/
+public class Solution13 {
+    public int romanToInt(String s) {
+        int i = s.length()-1;
+        char[] chars = s.toCharArray();
+        int result = 0;
+        while(i >= 0){
+            if(chars[i] == 'I'){
+                result += 1;
+                i --;
+                continue;
+            }
+            if(chars[i] == 'V'){
+                result += 5;
+                i --;
+                if(i >= 0 && chars[i] == 'I'){
+                    result -= 1;
+                    i --;
+                }
+                continue;
+            }
+            if(chars[i] == 'X'){
+                result += 10;
+                i --;
+                if(i >= 0 && chars[i] == 'I'){
+                    result -= 1;
+                    i --;
+                }
+                continue;
+            }
+            if(chars[i] == 'L'){
+                result += 50;
+                i --;
+                if(i >= 0 && chars[i] == 'X'){
+                    result -= 10;
+                    i --;
+                }
+                continue;
+            }
+            if(chars[i] == 'C'){
+                result += 100;
+                i --;
+                if(i >= 0 && chars[i] == 'X'){
+                    result -= 10;
+                    i --;
+                }
+                continue;
+            }
+            if(chars[i] == 'D'){
+                result += 500;
+                i --;
+                if(i >= 0 && chars[i] == 'C'){
+                    result -= 100;
+                    i --;
+                }
+                continue;
+            }
+            if(chars[i] == 'M'){
+                result += 1000;
+                i --;
+                if(i >= 0 && chars[i] == 'C'){
+                    result -= 100;
+                    i --;
+                }
+            }
+        }
+        return result;
+    }
+}
+
+=============================================================================================================================
+
+/*
+    有效的括号  【简单】
+    思路：压栈的思想
+*/
+
+import java.util.*;
+
+public class Solution20 {
+    public boolean isValid(String s) {
+        char[] chars = s.toCharArray();
+        List<Character> list = new ArrayList<>();
+        int len = 0;
+        // 遍历字符串所有符号
+        for (char c:
+                chars) {
+            // 发现')'，如果其左边符号是'('，则将'('消去；如果无法消去，则返回false
+            if(c == ')'){
+                if(len > 0 && list.remove(len-1) == '('){
+                    len --;
+                    continue;
+                }
+                return false;
+            }
+            if(c == ']'){
+                if(len > 0 && list.remove(len-1) == '['){
+                    len --;
+                    continue;
+                }
+                return false;
+            }if(c == '}'){
+                if(len > 0 && list.remove(len-1) == '{'){
+                    len --;
+                    continue;
+                }
+                return false;
+            }
+            // 对于左括号一律添加到集合中
+            list.add(c);
+            len ++;
+        }
+        // 如果最后没有消干净，返回false
+        return len == 0;
+    }
+}
+
+
+=============================================================================================================
+
+/*
+    买卖股票的最佳时机②  【简单】
+    给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+    设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+    注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+    思路：低点买入，高点抛出
+        当（i+1）>（i）时买入
+        当（i+1）<（i）时抛出
+        设计一个布尔值标记手上是否有股票
+*/
+
+import org.junit.Test;
+
+public class Solution122 {
+    public int maxProfit(int[] prices) {
+        if(prices.length == 1){
+            return 0;
+        }
+        int result = 0;
+        boolean flag = false;
+        int temp = 0;
+        for (int i = 0; i < prices.length-1; i++) {
+            if(!flag && prices[i+1] > prices[i]){
+                result -= prices[i];
+                temp = i;
+                flag = !flag;
+            }else if(flag && prices[i+1] < prices[i]){
+                result += prices[i];
+                flag = !flag;
+            }
+        }
+        if(flag && prices[prices.length-1] > prices[temp]){
+            result += prices[prices.length-1];
+        }
+        return result;
+    }
+}
