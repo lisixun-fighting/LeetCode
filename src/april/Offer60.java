@@ -2,6 +2,9 @@ package april;
 
 import java.util.*;
 
+/**
+ * dynamic planning
+ */
 public class Offer60 {
     public double[] dicesProbability(int n) {
         double[] dp = new double[n*6+1];
