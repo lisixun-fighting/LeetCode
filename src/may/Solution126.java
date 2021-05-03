@@ -2,45 +2,48 @@ package may;
 
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 
 
 /**
  * brand first search
  */
 public class Solution126 {
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        Set<String> myWordList = new HashSet<>(wordList);
-        int res = 1;
-        Set<String> dfs = new HashSet<>();
-        dfs.add(beginWord);
-        myWordList.remove(beginWord);
-        while (dfs.size() > 0 && !dfs.contains(endWord)) {
-            Set<String> tmp = new HashSet<>();
-            for (String word : dfs)
-                tmp.addAll(findNext(word, myWordList));
-            dfs = tmp;
-            res++;
-        }
-        return dfs.contains(endWord) ? res : 0;
-    }
 
-    private Set<String> findNext(String word, Set<String> wordList) {
-        Set<String> res = new HashSet<>();
-        Iterator<String> it = wordList.iterator();
-        while (it.hasNext()) {
-            String w = it.next();
-            if(matches(w, word)) {
-                res.add(w);
-                it.remove();
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<>();
+        Set<String> myWordList = new HashSet<>(wordList);
+        Set<List<String>> bfs = new HashSet<>();
+        bfs.add(List.of(beginWord));
+        myWordList.remove(beginWord);
+        boolean flag = true;
+        while (flag && bfs.size() > 0) {
+            Set<List<String>> tmp = new HashSet<>();
+            for (List<String> l : bfs) {
+                findNext(l, myWordList, tmp);
+            }
+            bfs = tmp;
+            for (List<String> l : bfs) {
+                if(l.get(l.size()-1).equals(endWord)) {
+                    res.add(l);
+                    flag = false;
+                }
+                myWordList.remove(l.get(l.size()-1));
             }
         }
         return res;
     }
+
+    private void findNext(List<String> l, Set<String> wordList, Set<List<String>> res) {
+        for (String word : wordList) {
+            if(matches(word, l.get(l.size()-1))) {
+                ArrayList<String> tmp = new ArrayList<>(l);
+                tmp.add(word);
+                res.add(tmp);
+            }
+        }
+    }
+
 
     private boolean matches(String w1, String w2) {
         if(w1.length() != w2.length())
@@ -58,7 +61,8 @@ public class Solution126 {
         List<String> wordList = List.of("hot","dot","dog","lot","log","cog");
         String begin = "hit";
         String end = "cog";
-        ladderLength(begin, end, wordList);
+        List<List<String>> res = findLadders(begin, end, wordList);
+        System.out.println(res);
     }
 
 }
