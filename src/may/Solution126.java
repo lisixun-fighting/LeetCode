@@ -44,7 +44,6 @@ public class Solution126 {
         }
     }
 
-
     private boolean matches(String w1, String w2) {
         if(w1.length() != w2.length())
             return false;
