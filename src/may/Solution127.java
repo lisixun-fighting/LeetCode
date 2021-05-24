@@ -23,7 +23,6 @@ public class Solution127 {
         }
         return dfs.contains(endWord) ? res : 0;
     }
-
     private Set<String> findNext(String word, Set<String> wordList) {
         Set<String> res = new HashSet<>();
         Iterator<String> it = wordList.iterator();
@@ -36,7 +35,6 @@ public class Solution127 {
         }
         return res;
     }
-
     private boolean matches(String w1, String w2) {
         if(w1.length() != w2.length())
             return false;
@@ -47,7 +45,6 @@ public class Solution127 {
         }
         return flag == 1;
     }
-
     @Test
     public void test() {
         List<String> wordList = List.of("hot","dot","dog","lot","log","cog");

@@ -7,10 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Solution227 {
-
     public int calculate(String s) {
         int res = 0;
-
         Pattern p = Pattern.compile("(\\d+)|[+-/*/]");
         Matcher matcher = p.matcher(s);
         Stack<String> stack = new Stack<>();
@@ -44,12 +42,10 @@ public class Solution227 {
         res += handle(stack);
         return res;
     }
-
     private int handle(Stack<String> stack) {
         int tmp = Integer.parseInt(stack.pop());
         return stack.pop().equals("+") ? tmp : -tmp;
     }
-
     public static void main(String[] args) {
         Solution227 s = new Solution227();
         int res = s.calculate("2 + 2*2");

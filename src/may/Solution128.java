@@ -19,10 +19,8 @@ public class Solution128 {
             dp.put(i-tmp1, tmp1+1+tmp2);
             dp.put(i+tmp2, tmp1+1+tmp2);
         }
-
-        for (Integer key : dp.keySet()) {
+        for (Integer key : dp.keySet())
             res = Math.max(res, dp.get(key));
-        }
         return res;
     }
 

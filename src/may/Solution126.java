@@ -9,7 +9,6 @@ import java.util.*;
  * brand first search
  */
 public class Solution126 {
-
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
         List<List<String>> res = new ArrayList<>();
         Set<String> myWordList = new HashSet<>(wordList);
@@ -33,7 +32,6 @@ public class Solution126 {
         }
         return res;
     }
-
     private void findNext(List<String> l, Set<String> wordList, Set<List<String>> res) {
         for (String word : wordList) {
             if(matches(word, l.get(l.size()-1))) {
@@ -43,7 +41,6 @@ public class Solution126 {
             }
         }
     }
-
     private boolean matches(String w1, String w2) {
         if(w1.length() != w2.length())
             return false;
@@ -54,7 +51,6 @@ public class Solution126 {
         }
         return flag == 1;
     }
-
     @Test
     public void test() {
         List<String> wordList = List.of("hot","dot","dog","lot","log","cog");
