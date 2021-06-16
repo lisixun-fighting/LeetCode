@@ -21,6 +21,7 @@ public class Solution286 {
             for (int i = 0; i < size; i++) {
                 int[] room = set.poll();
                 System.out.println(Arrays.toString(room));
+                assert room != null;
                 avail(room[0], room[1]-1, rooms, step, set);
                 avail(room[0], room[1]+1, rooms, step, set);
                 avail(room[0]-1, room[1], rooms, step, set);
