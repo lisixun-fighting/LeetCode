@@ -20,11 +20,11 @@ public class Solution373 {
             int i = tmp.get(0);
             int j = tmp.get(1);
             res.add(List.of(nums1[i], nums2[j]));
-            if (i+1 < m && j < n && !used[i+1][j]) {
+            if (i+1 < m && !used[i+1][j]) {
                 pq.add(List.of(i+1, j));
                 used[i+1][j] = true;
             }
-            if (i < m && j+1 < n && !used[i][j+1]) {
+            if (j+1 < n && !used[i][j+1]) {
                 pq.add(List.of(i,j+1));
                 used[i][j+1] = true;
             }
